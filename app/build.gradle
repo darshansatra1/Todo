@@ -1,12 +1,13 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'androidx.navigation.safeargs.kotlin'
+    id 'androidx.navigation.safeargs' version '2.4.2' apply false
     id "kotlin-kapt"
 }
 
 android {
     namespace 'com.example.todo'
+
     compileSdk 33
 
     defaultConfig {
@@ -63,7 +64,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
-    implementation("jp.wasabeef:recyclerview-animators:3.0.0")
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
 
 
 }
