@@ -3,14 +3,12 @@ package com.example.todo.fragments.list
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.todo.R
 import com.example.todo.databinding.FragmentListBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ListFragment : Fragment(R.layout.fragment_list) {
 
@@ -35,18 +33,21 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
-            override fun onPrepareMenu(menu: Menu) {
-                // Handle for example visibility of menu items
-            }
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.list_fragment_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Validate and handle the selected menu item
+                when(menuItem.itemId){
+                    R.id.menu_search->{}
+                    else->{
+                        findNavController().navigateUp()
+                    }
+                }
                 return true
             }
+
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
