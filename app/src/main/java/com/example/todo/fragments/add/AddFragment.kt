@@ -13,12 +13,28 @@ class AddFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        val view =  inflater.inflate(R.layout.fragment_add, container, false)
+
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_add, container, false)
+
+        return view
     }
 
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.add_fragment_menu,menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId==R.id.menu_add){
+            insertDataToDb()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun insertDataToDb(){
+
+        val mTitle = title_et.text.toString()
     }
 }
