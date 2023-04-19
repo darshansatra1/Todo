@@ -1,5 +1,6 @@
 package com.example.todo.fragments.update
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -52,7 +53,9 @@ class UpdateFragment : Fragment(R.layout.fragment_update) {
                     R.id.menu_save->{
                         updateItem()
                     }
-                    R.id.menu_delete->{}
+                    R.id.menu_delete->{
+                        confirmItemRemoval()
+                    }
                     else->{
                         findNavController().navigateUp()
                     }
@@ -62,6 +65,8 @@ class UpdateFragment : Fragment(R.layout.fragment_update) {
 
         },viewLifecycleOwner,Lifecycle.State.RESUMED)
     }
+
+
 
     private fun updateItem(){
         val title = binding.currentTitleEt.text.toString()
@@ -87,6 +92,23 @@ class UpdateFragment : Fragment(R.layout.fragment_update) {
         Toast.makeText(requireContext(),"Successfully Updated",Toast.LENGTH_SHORT).show()
 
         findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+    }
+
+    private fun confirmItemRemoval() {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setPositiveButton("Yes"){_,_->
+            todoViewModel.deleteData(args.currentItem)
+            Toast.makeText(requireContext(),"Successfully Deleted",Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+        }
+        builder.setNegativeButton("No"){_,_->}
+
+        builder.setTitle("Delete ${args.currentItem.title}")
+        builder.setMessage("Are you sure you want to delete ${args.currentItem.title} Task?")
+
+        builder.create().show()
+
     }
 
 }
