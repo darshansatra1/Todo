@@ -42,7 +42,8 @@ class ListAdapter:RecyclerView.Adapter<ListAdapter.ViewHolder>() {
             }
 
             binding.rowBackground.setOnClickListener{
-                binding.root.findNavController().navigate(R.id.action_listFragment_to_updateFragment)
+                val action = ListFragmentDirections.actionListFragmentToUpdateFragment(toDoData)
+                binding.root.findNavController().navigate(action)
             }
         }
     }

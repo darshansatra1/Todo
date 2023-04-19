@@ -8,15 +8,27 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.todo.R
+import com.example.todo.data.models.Priority
+import com.example.todo.data.models.ToDoData
 import com.example.todo.databinding.FragmentUpdateBinding
 
 class UpdateFragment : Fragment(R.layout.fragment_update) {
     private lateinit var binding:FragmentUpdateBinding
+    private val  args: UpdateFragmentArgs by navArgs<UpdateFragmentArgs>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentUpdateBinding.bind(view)
+
+
+        val currentItem = args.currentItem
+
+        binding.currentTitleEt.setText(currentItem.title)
+        binding.currentDescriptionEt.setText(currentItem.description)
+
+        binding.currentPrioritiesSpinner.setSelection(parsePriority(currentItem.priority))
 
         setupMenu()
     }
@@ -39,5 +51,13 @@ class UpdateFragment : Fragment(R.layout.fragment_update) {
             }
 
         },viewLifecycleOwner,Lifecycle.State.RESUMED)
+    }
+
+    private fun parsePriority(priority: Priority):Int{
+        return when(priority){
+            Priority.HIGH->0
+            Priority.MEDIUM->1
+            Priority.LOW->2
+        }
     }
 }
