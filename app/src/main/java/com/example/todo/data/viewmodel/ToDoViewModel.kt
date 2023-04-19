@@ -8,6 +8,7 @@ import com.example.todo.data.ToDoDatabase
 import com.example.todo.data.models.ToDoData
 import com.example.todo.data.repository.ToDoRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ToDoViewModel(application: Application):AndroidViewModel(application) {
@@ -19,6 +20,12 @@ class ToDoViewModel(application: Application):AndroidViewModel(application) {
     fun insertData(toDoData: ToDoData){
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertData(toDoData)
+        }
+    }
+
+    fun updateData(toDoData: ToDoData){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.updateData(toDoData)
         }
     }
 }
