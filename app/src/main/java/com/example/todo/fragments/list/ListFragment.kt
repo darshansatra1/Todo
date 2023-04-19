@@ -1,7 +1,9 @@
 package com.example.todo.fragments.list
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -53,6 +55,9 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when(menuItem.itemId){
                     R.id.menu_search->{}
+                    R.id.menu_delete_all->{
+                        confirmRemoval()
+                    }
                     else->{
                         findNavController().navigateUp()
                     }
@@ -61,6 +66,21 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun confirmRemoval() {
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setPositiveButton("Yes"){_,_->
+            todoViewModel.deleteAll()
+            Toast.makeText(requireContext(),"Successfully deleted all tasks", Toast.LENGTH_SHORT).show()
+        }
+        builder.setNegativeButton("No"){_,_->}
+
+        builder.setTitle("Delete all tasks")
+        builder.setMessage("Are you sure you want to delete all the tasks?")
+
+        builder.create().show()
     }
 
 }
