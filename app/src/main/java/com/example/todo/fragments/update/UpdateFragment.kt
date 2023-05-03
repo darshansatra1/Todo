@@ -20,14 +20,16 @@ import com.example.todo.databinding.FragmentUpdateBinding
 import com.example.todo.fragments.SharedViewModel
 
 class UpdateFragment : Fragment(R.layout.fragment_update) {
-    private lateinit var binding:FragmentUpdateBinding
-    private val  args: UpdateFragmentArgs by navArgs<UpdateFragmentArgs>()
+    private var _binding:FragmentUpdateBinding? = null
+    private val binding get() = _binding!!
+    private val  args: UpdateFragmentArgs by this.navArgs<UpdateFragmentArgs>()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val todoViewModel:ToDoViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentUpdateBinding.bind(view)
+        _binding = FragmentUpdateBinding.bind(view)
+
 
 
         val currentItem = args.currentItem
@@ -40,6 +42,11 @@ class UpdateFragment : Fragment(R.layout.fragment_update) {
         binding.currentPrioritiesSpinner.onItemSelectedListener = sharedViewModel.listener
 
         setupMenu()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupMenu(){
