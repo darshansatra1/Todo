@@ -20,47 +20,39 @@ import com.example.todo.fragments.SharedViewModel
 
 class ListFragment : Fragment(R.layout.fragment_list) {
 
-    private lateinit var binding: FragmentListBinding
+    private var _binding: FragmentListBinding? = null
+    private val binding get() = _binding!!
     private val adapter:ListAdapter by lazy { ListAdapter() }
     private val todoViewModel:ToDoViewModel by viewModels()
     private val sharedViewModel:SharedViewModel by viewModels()
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentListBinding.bind(view)
+        _binding = FragmentListBinding.bind(view)
+        binding.lifecycleOwner = this
+        binding.sharedViewModel = sharedViewModel
 
 
-
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        // Set up recycler view
+        setupRecyclerView()
 
         todoViewModel.getAllData.observe(viewLifecycleOwner,Observer{data->
             sharedViewModel.checkIfDatabaseEmpty(data)
             adapter.setData(data)
         })
 
-        binding.floatingActionButton.setOnClickListener{
-            findNavController().navigate(R.id.action_listFragment_to_addFragment)
-        }
-
-        sharedViewModel.emptyDatabase.observe(viewLifecycleOwner,Observer{
-            showEmptyDatabaseViews(it)
-        })
-
         setupMenu()
 
     }
 
-    private fun showEmptyDatabaseViews(emptyDatabase:Boolean) {
-        if(emptyDatabase){
-            binding.noDataImageView.visibility = View.VISIBLE
-            binding.noDataTextView.visibility = View.VISIBLE
-        }else{
-            binding.noDataImageView.visibility = View.GONE
-            binding.noDataTextView.visibility = View.GONE
-        }
+    private fun setupRecyclerView() {
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
     }
+
 
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
@@ -98,6 +90,11 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         builder.setMessage("Are you sure you want to delete all the tasks?")
 
         builder.create().show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
