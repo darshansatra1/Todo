@@ -20,17 +20,23 @@ import com.example.todo.fragments.SharedViewModel
 
 class AddFragment : Fragment(R.layout.fragment_add) {
 
-    private lateinit var binding: FragmentAddBinding
+    private var _binding: FragmentAddBinding? = null
+    private val binding get() = _binding!!
     private val todoViewModel: ToDoViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAddBinding.bind(view)
+        _binding = FragmentAddBinding.bind(view)
         binding.prioritiesSpinner.onItemSelectedListener = sharedViewModel.listener
 
         setupMenu()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupMenu(){

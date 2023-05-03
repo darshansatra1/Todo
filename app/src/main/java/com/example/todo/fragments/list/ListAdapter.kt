@@ -1,5 +1,6 @@
 package com.example.todo.fragments.list
 
+import android.inputmethodservice.Keyboard.Row
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,41 +16,23 @@ import com.example.todo.databinding.RowLayoutBinding
 class ListAdapter:RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     private var dataList = emptyList<ToDoData>()
 
-    inner class ViewHolder(private val binding:RowLayoutBinding):RecyclerView.ViewHolder(binding.root){
+    class ViewHolder(private val binding:RowLayoutBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(toDoData: ToDoData){
-            binding.titleTxt.text = toDoData.title
-            binding.descriptionTxt.text = toDoData.description
+            binding.toDoData = toDoData
+            binding.executePendingBindings()
+        }
 
-            when(toDoData.priority){
-                Priority.HIGH->binding.priorityIndicator.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        R.color.red
-                    )
-                )
-                Priority.LOW->binding.priorityIndicator.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        R.color.green
-                    )
-                )
-                Priority.MEDIUM->binding.priorityIndicator.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        R.color.yellow
-                    )
-                )
-            }
-
-            binding.rowBackground.setOnClickListener{
-                val action = ListFragmentDirections.actionListFragmentToUpdateFragment(toDoData)
-                binding.root.findNavController().navigate(action)
+        companion object{
+            fun from(parent:ViewGroup):ViewHolder{
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RowLayoutBinding.inflate(layoutInflater,parent,false)
+                return ViewHolder(binding)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(RowLayoutBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return ViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
