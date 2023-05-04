@@ -1,5 +1,6 @@
 package com.example.todo.fragments.list
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
@@ -113,13 +114,22 @@ class ListFragment : Fragment(R.layout.fragment_list), SearchView.OnQueryTextLis
                 searchView?.setOnQueryTextListener(this@ListFragment)
             }
 
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when(menuItem.itemId){
-                    R.id.menu_search->{
 
-                    }
                     R.id.menu_delete_all->{
                         confirmRemoval()
+                    }
+                    R.id.menu_priority_high->{
+                        todoViewModel.sortByHighPriority.observe(viewLifecycleOwner,Observer{
+                                adapter.setData(it)
+                        })
+                    }
+                    R.id.menu_priority_low->{
+                        todoViewModel.sortByLowPriority.observe(viewLifecycleOwner,Observer{
+                            adapter.setData(it)
+                        })
                     }
                     else->{
                         findNavController().navigateUp()
