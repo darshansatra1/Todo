@@ -10,19 +10,21 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.data.viewmodel.ToDoViewModel
 import com.example.todo.databinding.FragmentListBinding
 import com.example.todo.fragments.SharedViewModel
+import com.example.todo.fragments.list.adapter.ListAdapter
 
 class ListFragment : Fragment(R.layout.fragment_list) {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
-    private val adapter:ListAdapter by lazy { ListAdapter() }
+    private val adapter: ListAdapter by lazy { ListAdapter() }
     private val todoViewModel:ToDoViewModel by viewModels()
     private val sharedViewModel:SharedViewModel by viewModels()
 
@@ -51,6 +53,23 @@ class ListFragment : Fragment(R.layout.fragment_list) {
     private fun setupRecyclerView() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+
+        // Swipe to Delete
+        swipeToDelete(binding.recyclerView)
+    }
+
+    private fun swipeToDelete(recyclerView: RecyclerView){
+        val swipeToDeleteCallback = object: SwipeToDelete(){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val itemToDelete = adapter.dataList[viewHolder.adapterPosition]
+                todoViewModel.deleteData(itemToDelete)
+                Toast.makeText(requireContext(),"Successfully Remove: '${itemToDelete.title}'"
+                , Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
 

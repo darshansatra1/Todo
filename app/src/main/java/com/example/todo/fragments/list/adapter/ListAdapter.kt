@@ -1,20 +1,13 @@
-package com.example.todo.fragments.list
+package com.example.todo.fragments.list.adapter
 
-import android.inputmethodservice.Keyboard.Row
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todo.R
-import com.example.todo.data.models.Priority
 import com.example.todo.data.models.ToDoData
 import com.example.todo.databinding.RowLayoutBinding
 
 class ListAdapter:RecyclerView.Adapter<ListAdapter.ViewHolder>() {
-    private var dataList = emptyList<ToDoData>()
+    var dataList = emptyList<ToDoData>()
 
     class ViewHolder(private val binding:RowLayoutBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(toDoData: ToDoData){
@@ -23,7 +16,7 @@ class ListAdapter:RecyclerView.Adapter<ListAdapter.ViewHolder>() {
         }
 
         companion object{
-            fun from(parent:ViewGroup):ViewHolder{
+            fun from(parent:ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = RowLayoutBinding.inflate(layoutInflater,parent,false)
                 return ViewHolder(binding)
