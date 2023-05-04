@@ -3,6 +3,7 @@ package com.example.todo.fragments.list
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
@@ -23,7 +24,7 @@ import com.example.todo.fragments.list.adapter.ListAdapter
 import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 
-class ListFragment : Fragment(R.layout.fragment_list) {
+class ListFragment : Fragment(R.layout.fragment_list), SearchView.OnQueryTextListener {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
@@ -105,11 +106,18 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.list_fragment_menu, menu)
+
+                val search = menu.findItem(R.id.menu_search)
+                val searchView = search.actionView as? SearchView
+                searchView?.isSubmitButtonEnabled = true
+                searchView?.setOnQueryTextListener(this@ListFragment)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when(menuItem.itemId){
-                    R.id.menu_search->{}
+                    R.id.menu_search->{
+
+                    }
                     R.id.menu_delete_all->{
                         confirmRemoval()
                     }
@@ -138,9 +146,35 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         builder.create().show()
     }
 
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if(query!=null){
+            searchThroughDatabase(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if(query!=null){
+            searchThroughDatabase(query)
+        }
+        return true
+    }
+
+    private fun searchThroughDatabase(query:String) {
+        val searchQuery = "%$query%"
+
+        todoViewModel.searchDatabase(searchQuery).observe(this,Observer{list->
+            list?.let {
+                adapter.setData(it)
+            }
+        })
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 }
