@@ -13,7 +13,7 @@ class ListAdapter:RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     class ViewHolder(private val binding:RowLayoutBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(toDoData: ToDoData){
             binding.toDoData = toDoData
-            binding.executePendingBindings()
+            binding.executePendingBindings()f
         }
 
         companion object{
